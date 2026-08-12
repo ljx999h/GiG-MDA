@@ -19,7 +19,7 @@ from sklearn.metrics import (
 
 N_FOLDS = 5
 RANDOM_SEED = 42
-QUICK_SAMPLE = 500000  # None=全量
+QUICK_SAMPLE = None  # None=全量
 
 # 路径
 TRAIN_CSV = "data/F-Dataset/Evaluation/train.csv"

@@ -4,7 +4,7 @@
 >
 > Wen Li, Quan Hu, Bo Liu, Tianen Mai, Wei Zhang, Xiaojie Zhang, Yanyan Yu
 >
-> *Briefings in Bioinformatics (BIB), 2024, bbae337*
+> *Manuscript under review — citation will be added upon publication.*
 
 ---
 
@@ -240,16 +240,22 @@ python run_roc_pr_data.py
 
 ## Citation
 
+This repository is the implementation of the GiG-MDA framework. The manuscript
+is currently under review; a formal citation will be added once it is published.
+
+For the related MiRAGE method on which the local feature extraction is based,
+please cite:
+
 ```bibtex
-@article{li2024gig,
-  title={GiG-MDA: Integrating Graph-in-Graph Embeddings with
-         Multi-Modal Biological Features for Robust
-         Drug-Disease Association Prediction},
-  author={Li, Wen and Hu, Quan and Liu, Bo and Mai, Tianen and
-          Zhang, Wei and Zhang, Xiaojie and Yu, Yanyan},
+@article{hassanali2024mirage,
+  title={MiRAGE: mining relationships for advanced generative
+         evaluation in drug repositioning},
+  author={Hassanali Aragh, A. and Givehchian, P. and Moslemi Amirani, R.
+          and Masumshah, R. and Eslahchi, C.},
   journal={Briefings in Bioinformatics},
   volume={25},
-  number={bbae337},
+  number={4},
+  pages={bbae337},
   year={2024}
 }
 ```

@@ -1,8 +1,6 @@
 """
 =============================================================================
  MiRAGE Negative Sampling — 严格遵循论文三段式 Hard Negative Mining
- 论文: Hassanali Aragh et al., BIB 2024, bbae337
-       Pages 4-5 "Negative sampling" section
 =============================================================================
 
  论文原文逻辑 (三段式):
@@ -53,7 +51,7 @@ RANDOM_SEED = 42
 
 # 弱分类器类型: 'dt' (Decision Tree) / 'knn' / 'xgb' (XGBoost GPU)
 # 论文 Section "Ensuring classifier independence": 用 DT/KNN 做负采样, RF 做最终分类
-MINING_CLASSIFIER = 'xgb'  # 论文对齐: DecisionTree
+MINING_CLASSIFIER = 'dt'  # 论文对齐: DecisionTree
 
 # ================================================================
 # 22 维 MiRAGE 特征
@@ -250,7 +248,6 @@ def paper_negative_sampling(df_pos, df_neg_pool, valid_feats,
 def main():
     print("=" * 70)
     print(" MiRAGE Negative Sampling (论文三段式 Hard Negative Mining)")
-    print(" 论文: BIB 2024, bbae337, Pages 4-5")
     print("=" * 70)
 
     # ----------------------------------------------------------

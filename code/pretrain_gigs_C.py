@@ -1,6 +1,5 @@
 """
 C-Dataset GiGs 预训练 (无泄漏版)
- 论文: BIB 2024, bbae337
  数据: 663 drugs × 409 diseases, 用 mapping80_C.csv 训练
  输出: code/model/gigs_dataC.pkl
 """

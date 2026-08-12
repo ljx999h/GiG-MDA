@@ -76,6 +76,12 @@ def paper_negative_sampling(df_pos, df_neg_pool, valid_feats, classifier_type='x
         if classifier_type == 'knn':
             from sklearn.neighbors import KNeighborsClassifier
             clf = KNeighborsClassifier(n_neighbors=5, n_jobs=-1)
+        elif classifier_type == 'xgb':
+            # 敏感性分析: XGBoost 弱分类器
+            from xgboost import XGBClassifier
+            clf = XGBClassifier(n_estimators=100, max_depth=4, learning_rate=0.1,
+                                tree_method='hist', device='cuda',
+                                random_state=random_state, verbosity=0)
         else:
             # 论文: max_depth=4 浅层 DecisionTree
             from sklearn.tree import DecisionTreeClassifier

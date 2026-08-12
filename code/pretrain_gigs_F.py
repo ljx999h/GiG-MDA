@@ -1,6 +1,5 @@
 """
 F-Dataset GiGs 预训练 (无泄漏版)
- 论文: BIB 2024, bbae337
  数据: 592 drugs × 313 diseases, 字符串 ID, 用 mapping80_F.csv 训练
  输出: code/model/gigs_dataF.pkl
 """
