@@ -2,13 +2,16 @@
 import numpy as np
 
 class GiGsMatrixFactorization:
-    def __init__(self, k=70, lambda1=16, lambda2=0.125, lambda3=16, max_iter=200, tol=1e-4):
+    def __init__(self, k=64, lambda1=0.1, lambda2=0.01, lambda3=0.1, max_iter=150, tol=1e-4):
         """
         初始化 GiGs 模型参数
         :param k: 潜在特征维度 (Latent feature dimension)
         :param lambda1: 正则化参数 (Regularization parameter)
         :param lambda2: 图正则化参数 (Graph regularization parameter)
         :param lambda3: 相似度约束参数 (Similarity constraint parameter)
+        注: 默认值 = 论文统一配置 (与 pretrain_gigs_split.py 的显式传参一致);
+            早期版本默认值为 GiGs 原论文参数 (k=70, lambda=(16,0.125,16), 200 iter),
+            仅论文公式勘误前使用, 现默认值已与论文对齐.
         """
         self.k = k
         self.lambda1 = lambda1
@@ -19,17 +22,18 @@ class GiGsMatrixFactorization:
         self.X = None
         self.Y = None
 
-    def fit(self, A, Sd, Sv):
+    def fit(self, A, Sd, Sv, random_state=42):
         """
         训练模型
         :param A: 关联矩阵 (m x n), m=drugs, n=diseases
         :param Sd: 药物相似度矩阵 (m x m)
         :param Sv: 疾病相似度矩阵 (n x n)
+        :param random_state: X/Y 随机初始化种子 (多种子实验用)
         """
         m, n = A.shape
-        
+
         # 1. 初始化 X 和 Y (随机初始化)
-        np.random.seed(42)
+        np.random.seed(random_state)
         self.X = np.random.rand(m, self.k)
         self.Y = np.random.rand(n, self.k)
         

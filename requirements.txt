@@ -1,5 +1,5 @@
-# GiG-MDA 依赖清单
-# 建议使用 Python 3.9+ / Anaconda 环境
+# GiG-MDA 复现依赖
+# 建议 Python 3.9+ / Anaconda 环境
 # 安装: pip install -r requirements.txt
 
 # 核心数据科学
@@ -10,13 +10,17 @@ matplotlib>=3.7.0
 seaborn>=0.12.0
 tqdm>=4.66.0
 
-# 机器学习分类器 (XGBoost 需 GPU, 无 GPU 时去掉 device='cuda' 参数)
+# 机器学习分类器
+# 注: r2_config.py 中 XGB_CONFIG 的 device='cuda' 在无 GPU 时需改为 'cpu'
 xgboost>=2.0.0
 lightgbm>=4.0.0
 
-# 一次性工具 (仅 insert_ablation.py 需要, 非论文复现必需)
-reportlab>=4.0.0
-pikepdf>=8.0.0
+# 深度模型 (GCN 评估, gcn_eval.py)
+torch>=2.0.0
 
-# 可选: torch (仅部分可视化脚本需要, 非必需)
-# torch>=2.0.0
+# 化学信息学 (ECFP32 预训练对照与 scaffold-disjoint 划分)
+rdkit>=2023.3.1
+
+# 可选: 分子预训练表示 (MoLFormer) 需要 transformers + 联网下载权重;
+# 论文中的 MolEmb32 特征文件已随数据发布, 纯复现评估不需要重新提取
+# transformers>=4.30.0
