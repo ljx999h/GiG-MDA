@@ -3,7 +3,8 @@
 import subprocess
 import time
 
-PY = r'C:/Users/30744/anaconda3/python.exe'
+import sys
+PY = sys.executable
 
 
 def run(cmd, tag):
@@ -27,6 +28,7 @@ def dis_pipeline(ds, seed):
               '--random-state', str(seed),
               '--out', f'data/{sdir}/Splits/split_manifest_colddis_s{seed}.csv'], f'{tag}_split')
     ok = ok and run(['code/build_mirage_features.py', '--dataset', ds, '--neighbor-source', 'r2train',
+                     '--exclude', 'MolFormer',
                      '--manifest', f'data/{sdir}/Splits/split_manifest_colddis_s{seed}.csv',
                      '--out', f'code/results/MiRAGE_score_{ds}_colddis_s{seed}.csv'], f'{tag}_feat')
     ok = ok and run(['code/pretrain_gigs_split.py', '--dataset', ds,
@@ -36,7 +38,7 @@ def dis_pipeline(ds, seed):
                      '--manifest', f'data/{sdir}/Splits/split_manifest_colddis_s{seed}.csv',
                      '--score', f'code/results/MiRAGE_score_{ds}_colddis_s{seed}.csv',
                      '--out-dir', f'data/{sdir}/Splits/Cold_dis_s{seed}'], f'{tag}_neg')
-    ok = ok and run(['docx_check/cold_eval.py', '--dataset', ds, '--seed', str(seed),
+    ok = ok and run(['code/cold_eval.py', '--dataset', ds, '--seed', str(seed),
                      '--mode', 'cold-disease'], f'{tag}_eval')
     print(f"  [{ds} colddis s{seed}] {'OK' if ok else 'FAIL'} {time.time()-t0:.0f}s", flush=True)
     return ok

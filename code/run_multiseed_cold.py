@@ -44,9 +44,9 @@ def main():
             run([sys.executable, 'code/cold_split.py', '--dataset', ds,
                  '--random-state', str(s), '--out', f'{base_manifest}_{tag}.csv'])
             run([sys.executable, 'code/build_mirage_features.py', '--dataset', ds,
-                 '--neighbor-source', 'r2train',
+                 '--neighbor-source', 'r2train', '--exclude', 'MolFormer',
                  '--manifest', f'{base_manifest}_{tag}.csv',
-                 '--out', f'code/results/MiRAGE_score_{ds}_cold_{tag}.csv'])
+                 '--out', f'code/results/MiRAGE_score_{ds}_cold_{tag}.csv'])  # P0-1
             run([sys.executable, 'code/pretrain_gigs_split.py', '--dataset', ds,
                  '--manifest', f'{base_manifest}_{tag}.csv',
                  '--out', f'data/{ds}-Dataset/Splits/gigs_split_{ds}_cold_{tag}.pkl'
@@ -56,7 +56,7 @@ def main():
                  '--score', f'code/results/MiRAGE_score_{ds}_cold_{tag}.csv',
                  '--out-dir', f'data/{ds}-Dataset/Splits/Cold_{tag}'
                               if ds != 'DDCD' else f'data/DDCD/Splits/Cold_{tag}'])
-            run([sys.executable, 'docx_check/cold_eval.py', '--dataset', ds, '--seed', s])
+            run([sys.executable, 'code/cold_eval.py', '--dataset', ds, '--seed', s])
             print(f"  [COLD {ds} | seed {s}] 完成, 耗时 {time.time()-t0:.0f}s", flush=True)
     print("\n全部冷启动种子完成", flush=True)
 

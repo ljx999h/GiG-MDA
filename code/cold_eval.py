@@ -6,7 +6,7 @@
 对比变体 (统一 XGBoost 标准配置 + 方案B):
   MiRAGE(18) / MiRAGE+MolFormer(20) / +embed / +MolFormer+embed
 
-用法: python docx_check/cold_eval.py --dataset C
+用法: python code/cold_eval.py --dataset C
 """
 import argparse
 import pickle
@@ -96,10 +96,15 @@ def load(ds, seed=42, mode='cold-drug'):
     for df_ in (train, test):
         df_['drugID'] = df_['drugID'].astype(str).str.strip()
         df_['diseaseID'] = df_['diseaseID'].astype(str).str.strip()
-    # MolFormer 列从 score (已转 str, 含 MolFormer) merge 进 train
-    mol = score[score['drugID'].notna()]
-    train = train.merge(mol[['drugID', 'diseaseID'] + MOL_FEATS],
-                        on=['drugID', 'diseaseID'], how='left').fillna(0.0)
+    # MolFormer 相似度列从 score merge 进 train; 若特征文件已 --exclude MolFormer
+    # (P0-1: 委员会负采样与主结果不得含预训练相似度列), 缺失列置零兼容
+    if set(MOL_FEATS) <= set(score.columns):
+        mol = score[score['drugID'].notna()]
+        train = train.merge(mol[['drugID', 'diseaseID'] + MOL_FEATS],
+                            on=['drugID', 'diseaseID'], how='left').fillna(0.0)
+    else:
+        for c in MOL_FEATS:
+            train[c] = 0.0
     return train, test, gigs, feats, base_feats
 
 
@@ -177,7 +182,6 @@ def main():
 
     variants = {
         'MiRAGE':             (train[base].values, test[base].values),
-        'MiRAGE+MolFormer':   (train[mol].values, test[mol].values),
         'MiRAGE+dot':         (np.hstack([train[base].values, tr_dot[:, None]]),
                                np.hstack([test[base].values, te_dot[:, None]])),
         'MiRAGE+embed':       (np.hstack([train[base].values, tr_emb]),

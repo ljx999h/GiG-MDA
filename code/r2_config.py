@@ -53,6 +53,10 @@ FEAT_22 = ['count_drug', 'count_disease',
            'adj_p_score_Pharmacodynamics', 'adj_p_score_Smile']
 
 # MolFormer 增强特征 (build_mirage_features 的 mol/_cold 输出文件用): C/F 20 维, DDCD 24 维
+# ⚠️ 遗留 (R2 时代): FEAT_*_MOL 把 MolFormer 作为"相似度列"插入 GBA 特征.
+# R3 论文的 MolEmb32 通道 = MoLFormer 768-d 嵌入 → train-only PCA-32 (build_molformer_features.py
+# 生成嵌入, cold_eval.py / build_results_ledger.py / compare_pretrain_ablation.py 做 PCA).
+# 本包没有脚本读取 FEAT_*_MOL; 保留仅为兼容历史 R2 产物.
 _MOL_INSERT = [('p_score_MolFormer', 'p_score_Smile'), ('adj_p_score_MolFormer', 'adj_p_score_Smile')]
 
 

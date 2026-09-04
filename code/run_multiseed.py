@@ -45,7 +45,7 @@ def main():
             t0 = time.time()
             run([sys.executable, 'code/data_split.py', '--dataset', ds, '--random-state', str(seed)])
             run([sys.executable, 'code/build_mirage_features.py', '--dataset', ds,
-                 '--neighbor-source', 'r2train'])  # per-seed 重建 GBA 特征 (fold-local)
+                 '--neighbor-source', 'r2train', '--exclude', 'MolFormer'])  # P0-1: 不含预训练相似度列
             run([sys.executable, 'code/negative_mining_oof.py', '--dataset', ds,
                  '--random-state', str(seed), '--score', SCORES[ds]])
             run([sys.executable, 'code/pretrain_gigs_split.py', '--dataset', ds,

@@ -10,6 +10,8 @@ R2: 可复现 MiRAGE 特征构建器 (build_mirage_features)
               (输出应与旧 MiRAGE_score_{DS}.csv 数值完全一致)
   r2train   : 用 split_manifest 的 train 正样本构建邻居 → 泄漏安全,
               R2 方案B 唯一特征来源 (输出 MiRAGE_score_{DS}_r2.csv)
+  full      : 用全量 mapping 构建邻居 (部署模型: 全部已知关联 + 目标对留一排除);
+              案例研究三表 (case_study_deploy) 用
 
 特征公式 (与 notebook 完全一致):
   count_disease = |Ad|   (drug d 的 train 疾病邻居, 排除自身)
@@ -118,6 +120,18 @@ def _c_int_to_db(cfg):
 
 def load_neighbor_pairs(ds, cfg, source):
     """返回邻居对 DataFrame (drugID, diseaseID), 输出 ID 空间: C=整数, F/DDCD=字符串."""
+    if source == 'full':
+        df = pd.read_csv(cfg['mapping_full'])
+        df = _drop_unnamed_cols(df)
+        df = df.iloc[:, :2]
+        df.columns = ['drugID', 'diseaseID']
+        if ds == 'C':
+            df['drugID'] = df['drugID'].astype(int)
+            df['diseaseID'] = df['diseaseID'].astype(int)
+        else:
+            df['drugID'] = df['drugID'].astype(str).str.strip()
+            df['diseaseID'] = df['diseaseID'].astype(str).str.strip()
+        return df
     if source == 'mapping80':
         df = pd.read_csv(cfg['mapping80'])
         df = df.iloc[:, :2]
@@ -148,11 +162,16 @@ def _drop_unnamed_cols(df):
 
 
 def load_full_mapping(ds, cfg):
-    """全量映射 (标签真值), 返回 (drugID, diseaseID), C=整数空间."""
+    """全量映射 (标签真值), 返回 (drugID, diseaseID), C=整数空间.
+    加载时显式去重 (P0-5: F-Dataset mapping 曾含 1 行重复 pair) 并输出审计."""
     df = pd.read_csv(cfg['mapping_full'])
     df = _drop_unnamed_cols(df)
     df = df.iloc[:, :2]
     df.columns = ['drugID', 'diseaseID']
+    n_dup = df.duplicated().sum()
+    if n_dup:
+        print(f'  [audit] mapping 重复行 {n_dup} (已去重)')
+    df = df.drop_duplicates()
     if ds == 'C':
         _, db_to_int = _c_int_to_db(cfg)
         df['drugID'] = df['drugID'].astype(str).str.strip().map(lambda x: db_to_int.get(x, -1))
@@ -165,9 +184,10 @@ def load_full_mapping(ds, cfg):
 
 
 def entity_space(ds, cfg, source):
-    """实体空间: mapping80=邻居对实体 (复刻 notebook); r2train=split_manifest 全候选实体."""
-    if source == 'mapping80':
-        mf = pd.read_csv(cfg['mapping80'])
+    """实体空间: mapping80/full=邻居对实体 (复刻 notebook); r2train=split_manifest 全候选实体."""
+    if source in ('mapping80', 'full'):
+        mf = pd.read_csv(cfg['mapping80'] if source == 'mapping80' else cfg['entity_full'])
+        mf = _drop_unnamed_cols(mf) if source == 'full' else mf
         mf = mf.iloc[:, :2]
         mf.columns = ['drugID', 'diseaseID']
         if ds == 'C':
@@ -202,8 +222,13 @@ def leave_one_out_max(sub, col_ids, row_ids):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--dataset', required=True, choices=['C', 'F', 'DDCD'])
-    parser.add_argument('--neighbor-source', required=True, choices=['mapping80', 'r2train'],
-                        help='mapping80=校验移植(应与旧文件一致); r2train=R2泄漏安全特征')
+    parser.add_argument('--neighbor-source', required=True, choices=['mapping80', 'r2train', 'full'],
+                        help='mapping80=校验移植(应与旧文件一致); r2train=R2泄漏安全特征; full=部署特征(全部已知为邻居)')
+    parser.add_argument('--mapping-full', default=None,
+                        help='覆盖全量映射文件 (邻居/标签来源; 如 therapeutic-only 子集). '
+                             '实体空间仍取原始全量映射 (--entity-full 可另行覆盖)')
+    parser.add_argument('--entity-full', default=None,
+                        help='覆盖实体空间文件 (默认与原 mapping_full 相同)')
     parser.add_argument('--out', default=None, help='覆盖输出路径')
     parser.add_argument('--manifest', default=None,
                         help='覆盖 split_manifest 路径 (冷启动划分用)')
@@ -211,7 +236,12 @@ def main():
                         help='排除的相似度模态名 (逗号分隔, 如 Conditions,Category; 来源泄漏消融用)')
     args = parser.parse_args()
     ds = args.dataset
-    cfg = DATASETS[ds]
+    cfg = dict(DATASETS[ds])   # 复制, 不污染模块级配置
+    cfg['entity_full'] = cfg['mapping_full']   # 实体空间默认 = 原始全量映射
+    if args.mapping_full:
+        cfg['mapping_full'] = args.mapping_full   # 邻居/标签来源覆盖
+    if args.entity_full:
+        cfg['entity_full'] = args.entity_full
     if args.manifest:
         cfg['manifest'] = args.manifest
     if args.exclude:

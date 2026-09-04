@@ -16,6 +16,8 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 
 R2 = 'results/R2'
+R3 = 'results/R3'
+os.makedirs(R3, exist_ok=True)
 BLUE = '#2a78d6'
 ORANGE = '#eb6834'
 INK = '#0b0b0b'
@@ -33,10 +35,10 @@ plt.rcParams.update({
 
 def fig_cold_lift():
     df = pd.read_csv(os.path.join(R2, 'cold_start_results.csv'))
-    df = df[df['dataset'].isin(['C', 'DDCD'])]
-    labels = [f"{r['dataset']}-{r['cold_seed']}" for _, r in df.iterrows()]
-    mol = df['MolEmb32_lift'].values * 100
-    emb = df['embed_lift'].values * 100
+    df = df[df['dataset'].isin(['C', 'DDCD'])].sort_values(['dataset', 'seed'])
+    labels = [f"{r['dataset']}-{r['seed']}" for _, r in df.iterrows()]
+    mol = (df['molemb32'] / df['base'] - 1).values * 100
+    emb = (df['grmf'] / df['base'] - 1).values * 100
 
     fig, axes = plt.subplots(1, 2, figsize=(9.2, 3.4), sharey=True)
     for ax, ds in zip(axes, ['C', 'DDCD']):
@@ -46,7 +48,7 @@ def fig_cold_lift():
         ax.bar(x - w/2, mol[m], w, color=BLUE, edgecolor='white', linewidth=0.8, label='MolEmb32 (molecular channel)')
         ax.bar(x + w/2, emb[m], w, color=ORANGE, edgecolor='white', linewidth=0.8, label='GRMF embeddings (graph channel)')
         ax.set_xticks(x)
-        ax.set_xticklabels([f"s{int(s)}" for s in df[m]['cold_seed']], fontsize=8)
+        ax.set_xticklabels([f"s{int(s)}" for s in df[m]['seed']], fontsize=8)
         ax.set_title(ds + '-Dataset', fontsize=10)
         ax.set_ylim(0, 240)
         ax.set_yticks([0, 50, 100, 150, 200])
@@ -60,7 +62,7 @@ def fig_cold_lift():
                bbox_to_anchor=(0.5, -0.08), fontsize=8)
     fig.suptitle('Cold-start (cold-drug 20%) AUPR lift over base MiRAGE features', fontsize=11)
     fig.tight_layout(rect=[0, 0.08, 1, 0.96])
-    out = os.path.join(R2, 'fig1_cold_lift.png')
+    out = os.path.join(R3, 'fig1_cold_lift.png')
     fig.savefig(out, dpi=300, bbox_inches='tight')
     plt.close(fig)
     print('✅', out)
@@ -109,10 +111,10 @@ def fig_framework():
     arrow(7.0, 2.9, 7.4, 2.9)
     arrow(8.7, 2.9, 9.05, 2.9)
 
-    ax.text(0.15, 4.85, 'Leakage-aware protocol: pair-disjoint splits; features, embeddings, and negatives built fold-locally',
+    ax.text(0.15, 4.85, 'Leakage-aware protocol: pair-disjoint splits; features, embeddings, and negatives built training-locally',
             fontsize=7.5, style='italic', color='#52514e')
     ax.text(9.9, 1.0, '', fontsize=1)
-    out = os.path.join(R2, 'fig2_framework.png')
+    out = os.path.join(R3, 'fig2_framework.png')
     fig.savefig(out, dpi=300, bbox_inches='tight')
     plt.close(fig)
     print('✅', out)

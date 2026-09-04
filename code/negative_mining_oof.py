@@ -116,8 +116,14 @@ def main():
     neg_pool = aligned[aligned['label'] == 0].copy()
     print(f"P_train 正: {len(pos):,} | U_train 负池: {len(neg_pool):,}")
 
-    # 特征列 (去掉 ID 和 label)
-    feat_cols = [c for c in score.columns if c not in key + ['label']]
+    # 特征列 (P0-1 修复): 显式使用该数据集的非-MolFormer GBA 特征,
+    # 禁止 MolFormer/预训练分子相似度列进入委员会筛选 (否则负样本受分子信息影响)
+    feat_cols = [c for c in score.columns
+                 if c not in key + ['label'] and 'MolFormer' not in c]
+    banned = [c for c in feat_cols if 'MolEmb' in c or 'MolFormer' in c]
+    assert not banned, f'预训练分子列混入委员会特征: {banned}'
+    assert feat_cols, '委员会特征列为空'
+    print(f'  委员会特征列 ({len(feat_cols)} 列, 无 MolFormer): {feat_cols[:3]} ...')
 
     # 4. out-of-fold 投票
     kf = KFold(n_splits=args.K, shuffle=True, random_state=args.random_state)
