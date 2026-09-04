@@ -233,3 +233,8 @@ If you find any remaining mismatch between an equation and this code, treat the 
 ## 6. License
 
 For research use. Contact the corresponding author for details.
+
+
+## Archival snapshot
+
+A complete archival snapshot (code, results, split manifests, CTD therapeutic subset, case-study evidence files) is available on Zenodo: https://doi.org/10.5281/zenodo.22305793
