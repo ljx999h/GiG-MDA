@@ -191,3 +191,37 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+# ---------------- legacy 兼容垫片 (cold_topk.py 使用; 不影响新主逻辑) ----------------
+def mol_feats(df, emb_map, seed, shuffle=False):
+    raw = np.array([emb_map.get(d, np.zeros(768)) for d in df['drugID']], dtype=np.float32)
+    if shuffle:
+        rng = np.random.RandomState(seed)
+        uni, inv = np.unique(raw, axis=0, return_inverse=True)
+        perm = rng.permutation(len(uni))
+        raw = uni[perm[inv]]
+    return raw
+
+
+def fit_transform(tr_raw, te_raw, seed, n_comp=32, uniq_raw=None):
+    from sklearn.decomposition import PCA as _PCA
+    pca = _PCA(n_components=n_comp, random_state=42)
+    pca.fit(uniq_raw if uniq_raw is not None else np.unique(tr_raw, axis=0))
+    return (pca.transform(tr_raw).astype(np.float32),
+            pca.transform(te_raw).astype(np.float32))
+
+
+def ecfp_feats(ds, df, seed=None, n_comp=32):
+    from rdkit import Chem
+    from rdkit.Chem import rdFingerprintGenerator
+    sm = pd.read_csv(FEAT_PATH[ds])
+    smiles_map = dict(zip(sm['DrugID'].astype(str).str.strip(), sm['DrugSmile']))
+    gen = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=1024)
+    vecs = []
+    for d in df['drugID']:
+        smi = smiles_map.get(d, '')
+        m = Chem.MolFromSmiles(smi) if smi else None
+        vecs.append(np.zeros(1024, dtype=np.float32) if m is None
+                    else np.array(gen.GetFingerprint(m), dtype=np.float32))
+    return np.vstack(vecs)

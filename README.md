@@ -42,7 +42,7 @@ python code/build_mirage_features.py --dataset C --neighbor-source r2train
 python code/build_mirage_features.py --dataset C --neighbor-source mapping80 --out results/score_C_mapping80.csv
 ```
 
-### 3.3 Reliable negative mining (committee voting, Section 2.5)
+### 3.3 Committee-consensus negative filtering (committee voting, Section 2.5)
 
 ```bash
 python code/negative_mining_oof.py --dataset C --random-state 42 --score code/results/MiRAGE_score_C_r2.csv
@@ -233,8 +233,3 @@ If you find any remaining mismatch between an equation and this code, treat the 
 ## 6. License
 
 For research use. Contact the corresponding author for details.
-
-
-## Archival snapshot
-
-A complete archival snapshot (code, results, split manifests, CTD therapeutic subset, case-study evidence files) is available on Zenodo: https://doi.org/10.5281/zenodo.22305793
