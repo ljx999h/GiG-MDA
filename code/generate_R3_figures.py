@@ -50,8 +50,8 @@ def fig_cold_lift():
         ax.set_xticks(x)
         ax.set_xticklabels([f"s{int(s)}" for s in df[m]['seed']], fontsize=8)
         ax.set_title(ds + '-Dataset', fontsize=10)
-        ax.set_ylim(0, 240)
-        ax.set_yticks([0, 50, 100, 150, 200])
+        ax.set_ylim(-30, 250)
+        ax.set_yticks([-25, 0, 50, 100, 150, 200, 240])
         for xi, v in zip(x - w/2, mol[m]):
             ax.text(xi, v + 4, f"{v:+.0f}%", ha='center', va='bottom', fontsize=7, color=INK)
         for xi, v in zip(x + w/2, emb[m]):
