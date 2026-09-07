@@ -31,7 +31,7 @@ from cold_eval import load, load_mol_emb
 
 OUT = 'results/R3'
 os.makedirs(OUT, exist_ok=True)
-plt.rcParams.update({'font.family': 'DejaVu Sans', 'font.size': 9,
+plt.rcParams.update({'font.family': 'DejaVu Sans', 'font.size': 10.5,
                      'axes.grid': True, 'grid.color': '#d9d9d4',
                      'grid.linewidth': 0.6, 'axes.axisbelow': True,
                      'figure.facecolor': 'white'})
@@ -179,14 +179,14 @@ def render(fname, title, scores, yte, order, auroc_fn, aupr_fn):
         fpr, tpr, _ = roc_curve(yte, yp)
         prec, rec, _ = precision_recall_curve(yte, yp)
         col = COLORS[i % len(COLORS)]
-        axes[0].plot(fpr, tpr, color=col, lw=1.6)
-        axes[1].plot(rec, prec, color=col, lw=1.6)
-        axes[0].plot([], [], color=col, lw=1.6,
+        axes[0].plot(fpr, tpr, color=col, lw=1.1)
+        axes[1].plot(rec, prec, color=col, lw=1.1)
+        axes[0].plot([], [], color=col, lw=1.1,
                      label=f'{name} (AUC = {a:.3f} [{lo_a:.3f}-{hi_a:.3f}]; '
                            f'AP = {p:.3f} [{lo_p:.3f}-{hi_p:.3f}])')
-    axes[0].plot([0, 1], [0, 1], color='0.6', ls='--', lw=1.0,
+    axes[0].plot([0, 1], [0, 1], color='0.6', ls='--', lw=0.9,
                  label='Random baseline (AUC = 0.5)')
-    axes[1].axhline(prev, color='k', ls=':', lw=1.0,
+    axes[1].axhline(prev, color='k', ls=':', lw=0.9,
                     label=f'Prevalence ({prev:.3f})')
     axes[0].set_xlabel('False Positive Rate'); axes[0].set_ylabel('True Positive Rate')
     axes[1].set_xlabel('Recall'); axes[1].set_ylabel('Precision')
@@ -199,9 +199,9 @@ def render(fname, title, scores, yte, order, auroc_fn, aupr_fn):
     fig.legend(h0 + h1, l0 + l1, loc='lower center', bbox_to_anchor=(0.5, 0.012),
                ncol=2, fontsize=10.5, frameon=False, columnspacing=1.4,
                handlelength=1.4)
-    fig.suptitle(title, fontsize=12, y=0.995)
+    fig.suptitle(title, fontsize=13, y=0.995)
     fig.tight_layout(rect=[0, 0.225, 1, 0.93])
-    fig.savefig(fname, dpi=300, bbox_inches='tight')
+    fig.savefig(fname, dpi=600, bbox_inches='tight')
     plt.close(fig)
     print('saved', fname)
 
