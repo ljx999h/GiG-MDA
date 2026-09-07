@@ -15,8 +15,15 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 
-R2 = 'results/R2'
-R3 = 'results/R3'
+# 发布包内结果平铺于 results/; 本地账本在 results/R2/ —— 按文件实际位置解析
+def _pick(sub):
+    for cand in ('results/R2', 'results'):
+        if os.path.isfile(os.path.join(cand, sub)):
+            return cand
+    return 'results/R2'
+
+R2 = _pick('cold_start_results.csv')
+R3 = _pick('fig1_cold_lift.png')
 os.makedirs(R3, exist_ok=True)
 BLUE = '#2a78d6'
 ORANGE = '#eb6834'

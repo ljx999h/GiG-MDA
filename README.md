@@ -212,6 +212,8 @@ Pre-computed per-seed results are provided in `results/`:
 
 **Numerical precision note**: the CSVs store full-precision AUPR; the relative lifts quoted in the manuscript are rounded to one decimal place from these values, so a lift may differ from a value recomputed from the CSV by up to 0.1--0.2 percentage points.
 
+**Layout note**: shipped result files are flattened under `results/`; re-running the pipeline commands writes outputs under `results/R2/` (the shipped copies are the same files at the same commit). Figure scripts (`code/generate_R3_figures.py`, `code/gen_roc_pr_curves.py`) resolve input/output directories automatically from either layout. `data/{C,F}-Dataset/Splits/` and `data/DDCD/Splits/` ship the split manifests, per-seed GRMF embeddings (`gigs_split_*.pkl`), and final committee-filtered negatives used for the manuscript tables; the largest DDCD raw files are restored via `code/download_ddcd_zenodo.py`.
+
 ## 5. Code–paper correspondence (important)
 
 **The code is authoritative.** Every number in the manuscript is produced by this code; the manuscript equations describe the implementation. During review rounds the following discrepancies between earlier equation drafts and the code were found and **fixed in the manuscript** (not in the code):
