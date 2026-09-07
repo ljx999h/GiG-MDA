@@ -69,7 +69,11 @@ def gigs_vectors(df, gigs):
 
 def fit_predict(Xtr, ytr, Xte, kind='xgb'):
     if kind == 'lr':
-        clf = LogisticRegression(max_iter=2000, C=1.0)
+        # 与 build_results_ledger/evaluate_calibration 的 LR 管线一致 (scaler + liblinear)
+        from sklearn.preprocessing import StandardScaler
+        sc = StandardScaler().fit(Xtr)
+        Xtr, Xte = sc.transform(Xtr), sc.transform(Xte)
+        clf = LogisticRegression(max_iter=1000, C=1.0, solver='liblinear', random_state=42)
         clf.fit(Xtr, ytr)
     else:
         clf = xgb.XGBClassifier(**r2_config.XGB_CONFIG)
@@ -166,7 +170,7 @@ def prepare_regular(ds, seed):
 
 
 def render(fname, title, scores, yte, order, auroc_fn, aupr_fn):
-    fig, axes = plt.subplots(1, 2, figsize=(10.5, 4.3))
+    fig, axes = plt.subplots(1, 2, figsize=(10.5, 5.6))
     prev = yte.mean()
     for i, name in enumerate(order):
         yp = scores[name]
@@ -190,12 +194,13 @@ def render(fname, title, scores, yte, order, auroc_fn, aupr_fn):
     axes[1].set_title('(B) Precision-Recall curves')
     ytop = max(0.1, float(np.nanmax(prec)) * 1.1)
     axes[1].set_ylim(0, ytop)
-    handles, labels_ = axes[0].get_legend_handles_labels()
-    fig.legend(handles, labels_, loc='lower center', ncol=3,
-               fontsize=7.0, frameon=False, columnspacing=1.0,
+    h0, l0 = axes[0].get_legend_handles_labels()
+    h1, l1 = axes[1].get_legend_handles_labels()
+    fig.legend(h0 + h1, l0 + l1, loc='lower center', bbox_to_anchor=(0.5, 0.012),
+               ncol=2, fontsize=10.5, frameon=False, columnspacing=1.4,
                handlelength=1.4)
     fig.suptitle(title, fontsize=12, y=0.995)
-    fig.tight_layout(rect=[0, 0.08, 1, 0.95])
+    fig.tight_layout(rect=[0, 0.225, 1, 0.93])
     fig.savefig(fname, dpi=300, bbox_inches='tight')
     plt.close(fig)
     print('saved', fname)

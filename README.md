@@ -171,7 +171,7 @@ Pre-computed per-seed results are provided in `results/`:
 |---|---|
 | `results_manifest.csv` | Regular-setting AUPR/AUROC/F1 per model, dataset, and seed (per-seed feature construction) |
 | `cold_start_results.csv` | Cold-drug AUPR per split seed for base / +MolEmb32 / +GRMF / +Both |
-| `gcn_results.csv` | Lightweight GCN AUPR under the unified protocol (regular: 5 seeds; cold-drug: 4 seeds per dataset) |
+| `gcn_results.csv` | Lightweight GCN AUPR under the unified protocol (regular: seed-42 split; cold-drug: 4 seeds per dataset) |
 | `colddis_results.csv` | Cold-disease boundary analysis (C-Dataset 4 + DDCD 3 splits) |
 | `scaffold_results.csv` | Scaffold-disjoint (chemical cold-start) boundary analysis (4 splits) |
 | `feature_source_ablation.csv` | Clean feature-source ablation: leak-safe vs leak-prone source (C-Dataset, DDCD, seed 42) |

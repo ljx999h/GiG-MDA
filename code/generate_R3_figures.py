@@ -35,7 +35,12 @@ plt.rcParams.update({
 
 def fig_cold_lift():
     df = pd.read_csv(os.path.join(R2, 'cold_start_results.csv'))
-    df = df[df['dataset'].isin(['C', 'DDCD'])].sort_values(['dataset', 'seed'])
+    # 横轴顺序与 Table 3 (tab:cold) 的行序一致: 42, 7, 123, 2024
+    order = [42, 7, 123, 2024]
+    df = df[df['dataset'].isin(['C', 'DDCD'])].copy()
+    df['seed'] = df['seed'].astype(int)
+    df = df.set_index(['dataset', 'seed']).loc[
+        [(d, s) for d in ['C', 'DDCD'] for s in order]].reset_index()
     labels = [f"{r['dataset']}-{r['seed']}" for _, r in df.iterrows()]
     mol = (df['molemb32'] / df['base'] - 1).values * 100
     emb = (df['grmf'] / df['base'] - 1).values * 100
@@ -48,18 +53,18 @@ def fig_cold_lift():
         ax.bar(x - w/2, mol[m], w, color=BLUE, edgecolor='white', linewidth=0.8, label='MolEmb32 (molecular channel)')
         ax.bar(x + w/2, emb[m], w, color=ORANGE, edgecolor='white', linewidth=0.8, label='GRMF embeddings (graph channel)')
         ax.set_xticks(x)
-        ax.set_xticklabels([f"s{int(s)}" for s in df[m]['seed']], fontsize=8)
+        ax.set_xticklabels([f"s{int(s)}" for s in df[m]['seed']], fontsize=8.5)
         ax.set_title(ds + '-Dataset', fontsize=10)
         ax.set_ylim(-30, 250)
         ax.set_yticks([-25, 0, 50, 100, 150, 200, 240])
         for xi, v in zip(x - w/2, mol[m]):
-            ax.text(xi, v + 4, f"{v:+.0f}%", ha='center', va='bottom', fontsize=7, color=INK)
+            ax.text(xi, v + 4, f"{v:+.0f}%", ha='center', va='bottom', fontsize=7.5, color=INK)
         for xi, v in zip(x + w/2, emb[m]):
-            ax.text(xi, v + 4, f"{v:+.0f}%", ha='center', va='bottom', fontsize=7, color=INK)
+            ax.text(xi, v + 4, f"{v:+.0f}%", ha='center', va='bottom', fontsize=7.5, color=INK)
     axes[0].set_ylabel('AUPR lift vs base (%)')
     handles, labels_ = axes[0].get_legend_handles_labels()
     fig.legend(handles, labels_, loc='lower center', ncol=2, frameon=False,
-               bbox_to_anchor=(0.5, -0.08), fontsize=8)
+               bbox_to_anchor=(0.5, -0.08), fontsize=10.5)
     fig.suptitle('Cold-start (cold-drug 20%) AUPR lift over base MiRAGE features', fontsize=11)
     fig.tight_layout(rect=[0, 0.08, 1, 0.96])
     out = os.path.join(R3, 'fig1_cold_lift.png')
