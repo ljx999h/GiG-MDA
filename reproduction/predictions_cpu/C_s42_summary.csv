@@ -1,0 +1,5 @@
+dataset,seed,variant,dim,AUROC,AUPR_sklearn,AUPR_independent,archive_AUPR,delta_vs_archive
+C,42,MiRAGE,18,0.8797,0.3116,0.3115,0.3003,0.0113
+C,42,MiRAGE+MolEmb32,50,0.8888,0.3175,0.3165,0.3005,0.017
+C,42,MiRAGE+embed,146,0.8145,0.271,0.2716,0.3046,-0.0336
+C,42,MiRAGE+embed+MolEmb32,178,0.8044,0.3047,0.3047,0.3034,0.0013
