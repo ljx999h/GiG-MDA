@@ -1,17 +1,17 @@
-# A Leakage-Aware Protocol for Cold-Start Drug–Disease Association Prediction: What Molecular-Structure and Graph-Regularized Features Contribute—and What They Do Not
+# GiG-MDA: Guilt-by-Association, Graph-Regularized and Molecular Features for Cold-Start Drug–Disease Association Ranking under a Leakage-Aware Protocol
 
-(GiG-MDA: dual-channel framework evaluated in the manuscript)
-
-This code package reproduces all experiments in the manuscript (submitted to *Pharmaceuticals*). The pipeline implements a leakage-aware evaluation protocol (pair-disjoint splits; all features, embeddings, and negatives constructed fold-locally) and the cold-start (cold-drug) evaluation of molecular structure features (MoLFormer / ECFP32), graph-regularized embeddings (GRMF), and a lightweight GCN.
+This code package reproduces all experiments in the manuscript (submitted to the *International Journal of Molecular Sciences*). The pipeline implements a leakage-aware evaluation protocol (pair-disjoint splits; all features, embeddings, and negatives constructed fold-locally) and the cold-start (cold-drug) evaluation of molecular structure features (MoLFormer / ECFP32), graph-regularized embeddings (GRMF), and a lightweight GCN.
 
 ## 1. Environment
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements.txt          # ranges, as originally released
+pip install -r environment-lock.txt      # exact versions used for the reported values
 ```
 
-- Python 3.9+ (Anaconda recommended)
-- If no GPU is available, set `device='cpu'` in `XGB_CONFIG` in `code/r2_config.py`.
+- Python 3.9+ (Anaconda recommended). The reported values were produced with the versions pinned in `environment-lock.txt` (Python 3.12.7, XGBoost 3.0.2, scikit-learn 1.7.2).
+- **All reported values were produced with `device='cuda'`.** XGBoost's histogram method is not bit-identical between GPU and CPU, and closely spaced configurations can change order across devices; the measured effect is documented in `reproduction/README.md`.
+- If no GPU is available, set `device='cpu'` in `XGB_CONFIG` in `code/r2_config.py`; results will differ slightly from those reported.
 
 ## 2. Data
 
@@ -71,6 +71,28 @@ python code/cold_eval.py --dataset C --seed 42 --mode cold-drug
 # multi-seed orchestration:
 python code/run_multiseed_cold.py --seeds 42 7 123 2024 --datasets C DDCD
 ```
+
+Two additional scripts support the cold-start table and its verification:
+
+```bash
+# Regenerate results/cold_start_results.csv (the machine-readable source of the
+# cold-start table) end to end, building any missing training-local inputs first:
+python code/aggregate_cold_results.py --datasets C F DDCD --seeds 42 7 123 2024
+
+# Dump per-pair predictions (candidate identifiers, labels, scores) for the four
+# main XGBoost configurations and recompute AUROC / average precision:
+python code/dump_cold_predictions.py --dataset C --seed 42 --out-dir reproduction/predictions_gpu
+```
+
+### 3.6.1 Reproduction record (`reproduction/`)
+
+`reproduction/` holds per-pair predictions for the C-Dataset cold-drug splits
+(seeds 42 and 7) produced with `device=cuda` and `device=cpu`, together with
+per-split summaries and a README documenting the comparison. Under
+`device=cuda` the released code reproduces the reported AUPR for all four
+configurations in both splits; under `device=cpu` the same inputs give
+different values, and the seed-42 split reverses the order of the GBA baseline
+and the three-channel configuration.
 
 ### 3.7 Boundary and robustness analyses (Section 3.7)
 
