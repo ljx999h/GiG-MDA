@@ -1,0 +1,85 @@
+CTD therapeutic curated 行数: 31,312
+DirectEvidence 取值示例: ['therapeutic']
+疾病空间内行: 27,662 | 药物名命中: 12,835 (46.4%)
+多义规范化名 (1→多 DB): 0 个, 例如: []
+审计明细: data/ctd_raw/therapeutic_audit.csv (12,835 行)
+therapeutic 关联集: data/DDCD/Mapping/mapping_therapeutic.csv | 行数 12,835 | 药物 1,127 / 1410 | 疾病 1,023 / 1573
+与原 DDCD mapping 交集: 12,066 / 42,200 (原 mapping 中占比 28.6%)
+
+未匹配到任何 CTD therapeutic 行的 DDCD 药物: 283
+ alpha-Tocopherol succinate
+                 Duloxetine
+                Venlafaxine
+              Levocarnitine
+  gamma-Hydroxybutyric acid
+            Pamidronic acid
+       Tenofovir disoproxil
+             Ergocalciferol
+                       NADH
+                  Vitamin C
+             Norethisterone
+Beclomethasone dipropionate
+                 Vismodegib
+             Sulfamethazine
+              Thiabendazole
+             Paramethadione
+              Metamfetamine
+      Mycophenolate mofetil
+               Liothyronine
+                 Raloxifene
+                   Imatinib
+                 Sildenafil
+                 Phenacetin
+                 Meticillin
+                  Cefalotin
+              Ubidecarenone
+               Isoprenaline
+                Lipoic acid
+               Rosuvastatin
+           Benzylpenicillin
+                        ATP
+             Lithium cation
+                 Salbutamol
+                 Mesalazine
+                 Stanozolol
+                  Boldenone
+                 Amineptine
+                 Thimerosal
+              Orciprenaline
+                  Clomifene
+          Cortisone acetate
+                 Dienestrol
+                Triptorelin
+                 Prasterone
+                Aldosterone
+                 Permethrin
+                 Vitamin D3
+                Terbinafine
+                 Metamizole
+                 Rifampicin
+                  Prasugrel
+                  Latamoxef
+                  Malathion
+                    Lindane
+             Midomafetamine
+              Ethchlorvynol
+        Phosphatidyl serine
+               Pidolic acid
+           Cromoglicic acid
+              Oxybuprocaine
+therapeutic 度数 Methotrexate: 89
+therapeutic 度数 Cocaine: 7
+therapeutic 度数 Stomach Neoplasms: 33
+therapeutic 度数 Colonic Neoplasms: 52
+
+therapeutic 度数 Top-10 药物:
+  DB02709 Resveratrol: 213
+  DB01234 Dexamethasone: 131
+  DB11672 Curcumin: 129
+  DB01065 Melatonin: 115
+  DB00945 Aspirin: 113
+  DB06151 Acetylcysteine: 111
+  DB00328 Indomethacin: 99
+  DB00860 Prednisolone: 98
+  DB00635 Prednisone: 92
+  DB00563 Methotrexate: 89

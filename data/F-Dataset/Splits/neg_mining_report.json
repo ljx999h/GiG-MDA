@@ -1,0 +1,15 @@
+{
+  "dataset": "F",
+  "K": 5,
+  "n_pos_train": 1545,
+  "n_neg_pool": 146440,
+  "n_reliable": 146183,
+  "n_selected_neg": 1545,
+  "coverage_all_K": true,
+  "num_preds_dist": {
+    "0": 146183,
+    "3": 121,
+    "2": 91,
+    "5": 45
+  }
+}

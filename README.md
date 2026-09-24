@@ -176,6 +176,14 @@ Pre-computed per-seed results are provided in `results/`:
 | `scaffold_results.csv` | Scaffold-disjoint (chemical cold-start) boundary analysis (4 splits) |
 | `feature_source_ablation.csv` | Clean feature-source ablation: leak-safe vs leak-prone source (C-Dataset, DDCD, seed 42) |
 | `pretrain_ablation.csv` | Cold-drug per-seed lifts for MolEmb32 / ECFP32 / Shuffled32 |
+| `cold_topk_{C,F,DDCD}.csv` | Cold-drug top-k decision metrics (P@10/P@50/R@100) per split seed for Base / MolEmb32 / GRMF / ECFP32 / Both (source of Table 2) |
+| `case_study_stats_cmh.csv` / `.json` | Case study: per-view Fisher tests, Cochran--Mantel--Haenszel common odds ratio, Breslow--Day heterogeneity, and reviewer agreement (source of the Section 3.9 statistics) |
+| `modality_ablation_cold_new.csv` | Source-level leakage check on C-Dataset: base and molecular-channel AUPR after removing the Conditions/Category modalities (Section 3.7) |
+| `cold_baselines.csv` | Cold-drug AUPR/AUROC of classical baselines (LR, RF) on the same base features as the cold base model (classifier-dependence check reported in the Limitations) |
+| `cold_lr_rep.csv` | Same-classifier (LR) representation comparison in the cold setting: base / +embed / +MolEmb32 / +both |
+| `matched_selection_pilot.csv` | Matched training-only model selection pilot (per-variant inner-CV grid) for the cold-drug setting |
+| `leakprone_three_channel.csv` | Leak-prone-protocol and MiRAGE-protocol results for the base and three-channel configurations (source of the Table 10 bottom rows) |
+| `code/results/score_{C,F}_mirage_protocol.csv` | Features under the MiRAGE protocol (full association matrix, target pair not excluded), built with `code/build_mirage_features.py --neighbor-source full --no-loo` (DDCD version regenerable; ~0.6 GB) |
 | `calibration_{C,F,DDCD}.csv` | ECE before/after Platt/isotonic, P@10/R@100 |
 | `negative_sampling_compare.csv` | Committee-consensus filter vs random negative sampling (single split, seed 42) |
 | `grmf_hyperparam_search_C.csv` | GRMF hyperparameter sensitivity search |

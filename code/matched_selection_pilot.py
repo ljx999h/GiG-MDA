@@ -123,7 +123,13 @@ def main():
     out = 'results/R2/matched_selection_pilot.csv'
     df = pd.DataFrame(rows)
     if os.path.exists(out):
-        df = pd.concat([pd.read_csv(out), df], ignore_index=True)
+        prev = pd.read_csv(out)
+        # 去重: 同一 (dataset, seed, variant) 只保留本次重算结果
+        key = ['dataset', 'seed', 'variant']
+        prev = prev.merge(df[key].drop_duplicates(), on=key, how='left', indicator=True)
+        prev = prev[prev['_merge'] == 'left_only'].drop(columns=['_merge'])
+        df = pd.concat([prev, df], ignore_index=True)
+    df = df.sort_values(['dataset', 'seed', 'variant']).reset_index(drop=True)
     df.to_csv(out, index=False)
     print('saved', out)
 

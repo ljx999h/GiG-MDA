@@ -26,6 +26,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--dataset', required=True, choices=['C', 'F', 'DDCD'])
     ap.add_argument('--seeds', nargs='+', type=int, default=[42, 7, 123, 2024])
+    ap.add_argument('--variants', nargs='+', default=None,
+                    help='只跑指定变体 (如 --variants Both)')
+    ap.add_argument('--out', default=None, help='输出 CSV (默认 results/R2/cold_topk_<ds>.csv)')
     args = ap.parse_args()
     ds = args.dataset
     emb_map = load_mol_emb(ds)
@@ -53,7 +56,11 @@ def main():
                      np.hstack([test[base].values, te_emb])),
             'ECFP32': (np.hstack([train[base].values, tr_e32]),
                        np.hstack([test[base].values, te_e32])),
+            'Both': (np.hstack([train[base].values, tr_emb, tr_m32]),
+                     np.hstack([test[base].values, te_emb, te_m32])),
         }
+        if args.variants:
+            variants = {k: v for k, v in variants.items() if k in args.variants}
         for name, (Xtr, Xte) in variants.items():
             import xgboost as xgb
             import r2_config
@@ -67,7 +74,7 @@ def main():
                          'P@10': p10, 'P@50': p50, 'R@100': r100})
             print(f'{ds} s{seed} {name:10s} P@10={p10:.3f} P@50={p50:.3f} R@100={r100:.4f}')
     df = pd.DataFrame(rows)
-    out = f'results/R2/cold_topk_{ds}.csv'
+    out = args.out or f'results/R2/cold_topk_{ds}.csv'
     df.to_csv(out, index=False)
     print('saved', out)
 

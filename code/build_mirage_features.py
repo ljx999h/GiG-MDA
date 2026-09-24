@@ -210,9 +210,16 @@ def entity_space(ds, cfg, source):
     return all_drugs, all_diseases
 
 
+NO_LOO = False  # True = MiRAGE 原始协议 (不排除目标对自身; 由 --no-loo 设置)
+
+
 def leave_one_out_max(sub, col_ids, row_ids):
     """sub: (n_targets × k); col_ids: 邻居 ID (k); row_ids: 每个 target 的自身 ID (n_targets).
-    每行取排除自身列后的 max; 无合法列 → 0."""
+    每行取排除自身列后的 max; 无合法列 → 0.
+    NO_LOO=True 时复现 MiRAGE 原始协议: 不做自身排除 (已知关联的 x_p 可取到 sim(d,d)=1)."""
+    if NO_LOO:
+        m = np.nanmax(sub, axis=1)
+        return np.nan_to_num(m, nan=0.0, neginf=0.0)
     mask = col_ids[None, :] == row_ids[:, None]
     v = np.where(mask, -np.inf, sub)
     m = np.nanmax(v, axis=1)
@@ -234,7 +241,11 @@ def main():
                         help='覆盖 split_manifest 路径 (冷启动划分用)')
     parser.add_argument('--exclude', default=None,
                         help='排除的相似度模态名 (逗号分隔, 如 Conditions,Category; 来源泄漏消融用)')
+    parser.add_argument('--no-loo', action='store_true',
+                        help='复现 MiRAGE 原始协议: 不排除目标对自身 (已知关联 x_p 可取 1)')
     args = parser.parse_args()
+    global NO_LOO
+    NO_LOO = bool(args.no_loo)
     ds = args.dataset
     cfg = dict(DATASETS[ds])   # 复制, 不污染模块级配置
     cfg['entity_full'] = cfg['mapping_full']   # 实体空间默认 = 原始全量映射

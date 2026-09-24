@@ -1,0 +1,17 @@
+{
+  "dataset": "C",
+  "K": 5,
+  "n_pos_train": 2025,
+  "n_neg_pool": 214908,
+  "n_reliable": 214687,
+  "n_selected_neg": 2025,
+  "coverage_all_K": true,
+  "num_preds_dist": {
+    "0": 214687,
+    "5": 148,
+    "3": 30,
+    "2": 24,
+    "1": 15,
+    "4": 4
+  }
+}

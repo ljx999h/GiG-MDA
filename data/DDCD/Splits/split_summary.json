@@ -1,0 +1,13 @@
+{
+  "dataset": "DDCD",
+  "test_size": 0.2,
+  "random_state": 42,
+  "n_drugs": 1410,
+  "n_diseases": 1573,
+  "n_candidates": 2217930,
+  "n_pos_train": 33760,
+  "n_pos_test": 8440,
+  "n_neg_train": 1740584,
+  "n_neg_test": 435146,
+  "train_test_pair_disjoint": true
+}

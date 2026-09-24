@@ -1,0 +1,13 @@
+{
+  "dataset": "F",
+  "test_size": 0.2,
+  "random_state": 42,
+  "n_drugs": 591,
+  "n_diseases": 313,
+  "n_candidates": 184983,
+  "n_pos_train": 1545,
+  "n_pos_test": 387,
+  "n_neg_train": 146440,
+  "n_neg_test": 36611,
+  "train_test_pair_disjoint": true
+}

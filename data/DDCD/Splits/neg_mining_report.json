@@ -1,0 +1,15 @@
+{
+  "dataset": "DDCD",
+  "K": 5,
+  "n_pos_train": 33760,
+  "n_neg_pool": 1740584,
+  "n_reliable": 1735580,
+  "n_selected_neg": 33760,
+  "coverage_all_K": true,
+  "num_preds_dist": {
+    "0": 1735580,
+    "5": 3978,
+    "4": 869,
+    "3": 157
+  }
+}

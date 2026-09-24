@@ -1,0 +1,13 @@
+{
+  "dataset": "C",
+  "test_size": 0.2,
+  "random_state": 42,
+  "n_drugs": 663,
+  "n_diseases": 409,
+  "n_candidates": 271167,
+  "n_pos_train": 2025,
+  "n_pos_test": 507,
+  "n_neg_train": 214908,
+  "n_neg_test": 53727,
+  "train_test_pair_disjoint": true
+}

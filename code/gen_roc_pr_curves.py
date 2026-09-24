@@ -224,8 +224,9 @@ def main():
     scores = {}
     order = []
     for name, (Xtr, Xte) in data.items():
-        kind = 'lr' if name == 'LR' else 'xgb'
-        scores[name] = fit_predict(Xtr, ytr, Xte, kind)
+        if name in ('dot', 'LR'):
+            continue  # 主表 (Table 1) 只含四个特征配置, 图与之保持一致
+        scores[name] = fit_predict(Xtr, ytr, Xte, 'xgb')
         order.append(name)
         print(f'[regular] {name} done', flush=True)
     render(f'{OUT}/fig_roc_pr_regular_c.png',
