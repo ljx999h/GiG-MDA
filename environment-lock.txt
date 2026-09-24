@@ -1,0 +1,16 @@
+# Environment recorded by the authors for the reported experiments.
+# Python 3.12.7 (Anaconda distribution, Windows 11)
+# Device used for all reported values: NVIDIA GeForce RTX 4060 Laptop GPU (CUDA)
+# Install: pip install -r environment-lock.txt
+
+numpy==1.26.4
+pandas==2.2.2
+scipy==1.16.0
+scikit-learn==1.7.2
+xgboost==3.0.2
+lightgbm==4.6.0
+torch==2.5.1+cu121
+rdkit==2026.03.5
+matplotlib==3.9.2
+seaborn==0.13.2
+tqdm==4.65.2
