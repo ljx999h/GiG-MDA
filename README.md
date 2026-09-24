@@ -1,5 +1,12 @@
 # GiG-MDA: Guilt-by-Association, Graph-Regularized and Molecular Features for Cold-Start Drug–Disease Association Ranking under a Leakage-Aware Protocol
 
+**Authors**: Wen Li, Quan Hu, Yanxiu Fu, Xiaojie Zhang, Bo Liu, Tianen Mai and Peng Wang
+School of Electronic Information, Hunan First Normal University, Changsha 410205, China
+
+**Correspondence**: Xiaojie Zhang (xzhang6@gradcenter.cuny.edu); Peng Wang (pwang@hnu.edu.cn)
+
+**Funding**: National Natural Science Foundation of China (Grant No. 62573187) and Hunan Provincial Natural Science Foundation (Grant No. 2026JJ80253).
+
 This code package reproduces all experiments in the manuscript (submitted to the *International Journal of Molecular Sciences*). The pipeline implements a leakage-aware evaluation protocol (pair-disjoint splits; all features, embeddings, and negatives constructed fold-locally) and the cold-start (cold-drug) evaluation of molecular structure features (MoLFormer / ECFP32), graph-regularized embeddings (GRMF), and a lightweight GCN.
 
 ## 1. Environment
@@ -262,6 +269,26 @@ If you find any remaining mismatch between an equation and this code, treat the 
 
 **Legacy configuration note.** `r2_config.FEAT_18_MOL` / `FEAT_22_MOL` insert MoLFormer-derived *similarity columns* (`p_score_MolFormer`) into the GBA feature set and belong to the R2-era pipeline. The R3 manuscript's molecular channel (**MolEmb32**) is the *embedding path*: MoLFormer 768-d embeddings (produced by `build_molformer_features.py`, stored in `code/results/molformer/`) PCA-projected to 32 dimensions on unique training drugs only (implemented in `cold_eval.py`, `build_results_ledger.py`, and `compare_pretrain_ablation.py`). No script in this package reads `FEAT_*_MOL`; they are kept for compatibility with historical R2 artifacts. The `docs/GRMF_update_rules.md` derivation likewise describes the R3 equations.
 
-## 6. License
+## 6. Citation
+
+If you use this code or the released splits, please cite the manuscript:
+
+```bibtex
+@article{GiGMDA2026,
+  title   = {{GiG-MDA}: Guilt-by-Association, Graph-Regularized and Molecular Features
+             for Cold-Start Drug--Disease Association Ranking under a Leakage-Aware Protocol},
+  author  = {Li, Wen and Hu, Quan and Fu, Yanxiu and Zhang, Xiaojie and Liu, Bo and
+             Mai, Tianen and Wang, Peng},
+  journal = {International Journal of Molecular Sciences},
+  year    = {2026},
+  note    = {Manuscript submitted}
+}
+```
+
+The archived snapshot accompanying the manuscript is available at Zenodo
+(DOI: 10.5281/zenodo.22305793); the largest DDCD evaluation files are hosted at
+Zenodo (DOI: 10.5281/zenodo.21883418).
+
+## 7. License
 
 For research use. Contact the corresponding author for details.
